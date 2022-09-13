@@ -9,7 +9,7 @@ export default async function mongo(){
     let connect;
 
     try {
-        connect = await mongoClient.db('mywallet');
+        connect = await mongoClient.db('techstore');
     return connect;
     } catch (error) {
         console.error(error);
