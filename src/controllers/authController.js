@@ -1,6 +1,7 @@
 import mongo from '../db/db.js';
 import bcrypt from 'bcrypt';
-import {signUpSchema} from '../schemas/authSchema.js'
+import {v4 as uuid} from 'uuid';
+import {signUpSchema, singInSchema} from '../schemas/authSchema.js'
 
 let db = await mongo();
 
@@ -34,4 +35,45 @@ async function signUp(req, res) {
     }
 }
 
-export {signUp};
+async function signIn(req, res) {
+    const {email, password} = req.body;
+
+    const isValid = singInSchema.validate({email, password}, {abortEarly: false});
+
+    if(isValid.error){
+        return res.status(422).send(isValid.error.message);
+    }
+
+    try{
+        const user = await db.collection('users').findOne({email});
+        
+        if(!user){
+            return res.status(404).send('Usuário não encontrado!')
+        }
+
+        const passwordIsValid = bcrypt.compareSync(password, user.password);
+
+        if(user && passwordIsValid){
+            const token = uuid();
+            const name = user.name;
+
+            await db.collection('sessions').insertOne({
+                token,
+                userId: user._id
+            })
+
+            const body = {token, name}
+
+            res.send(body);
+        
+        }else{
+            res.sendStatus(401);
+        }
+
+    }catch(err){
+        console.log(err)
+        return res.sendStatus(500);
+    }
+}
+
+export {signUp, signIn};
