@@ -1,9 +1,13 @@
 import {Router} from 'express';
-import { signUp, signIn } from '../controllers/authController.js';
+import { signUp, signIn, logout } from '../controllers/authController.js';
+import authUser from '../middlewares/authMiddlewares.js';
 
 const authRouter = Router();
 
 authRouter.post("/cadastro", signUp);
 authRouter.post("/login", signIn);
+
+authRouter.use(authUser)
+authRouter.post("/logout", logout);
 
 export default authRouter;

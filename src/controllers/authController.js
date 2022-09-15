@@ -76,4 +76,15 @@ async function signIn(req, res) {
     }
 }
 
-export {signUp, signIn};
+async function logout(req, res) {
+    const { token } = res.locals.user;
+
+    try {
+        await db.collection("sessions").deleteOne({token});
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(err)
+        return res.sendStatus(500);
+    }
+}
+export {signUp, signIn, logout};
