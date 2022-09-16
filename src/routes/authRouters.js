@@ -8,6 +8,6 @@ authRouter.post("/cadastro", signUp);
 authRouter.post("/login", signIn);
 
 authRouter.use(authUser)
-authRouter.post("/logout", logout);
+authRouter.delete("/logout", logout);
 
 export default authRouter;
