@@ -83,7 +83,7 @@ async function logout(req, res) {
         await db.collection("sessions").deleteOne({token});
         res.sendStatus(200);
     } catch (error) {
-        console.log(err)
+        console.log(error)
         return res.sendStatus(500);
     }
 }
