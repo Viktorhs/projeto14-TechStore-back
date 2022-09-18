@@ -8,6 +8,8 @@ router.get("/produtos", products.listProducts);
 
 router.use(authUser);
 router.post("/addCarrinho/:productId", products.addCart);
+router.post("/removeOne/:productId", products.removeOneCart);
+router.delete("/removeItem/:productId", products.removeCart);
 
 
 export default router;
