@@ -4,6 +4,7 @@ import cors from "cors";
 import authRouter from "./routes/authRouters.js"
 import productsRouter from "./routes/productsRouters.js"
 
+
 dotenv.config();
 
 const app = express();
