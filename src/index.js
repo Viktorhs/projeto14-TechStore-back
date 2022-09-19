@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import authRouter from "./routes/authRouters.js"
 import productsRouter from "./routes/productsRouters.js"
-import checkoutRouter from './routes/checkoutRouter.js';
+import checkoutRouter from "./routes/checkoutRouter.js"
 
 dotenv.config();
 
