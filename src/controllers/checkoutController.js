@@ -41,4 +41,18 @@ async function checkout(req, res) {
     }
 }
 
-export {checkout}; 
+async function userInfos(req, res){
+    const {userId} = res.locals.user;
+
+    try{
+        const userInfos = await db.collection("orders").find({userId}).toArray();
+        res.send(userInfos);
+
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+}
+
+
+export {checkout, userInfos}; 
