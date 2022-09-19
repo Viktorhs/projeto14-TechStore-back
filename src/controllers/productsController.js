@@ -14,6 +14,27 @@ async function listProducts(req, res) {
 
 }
 
+async function listCart(req, res) {
+    const {userId} = res.locals.user;
+    let total = 0
+    try {
+        const cart = await db.collection('cart').findOne({userId});
+        for(let i = 0; i < cart.products.length ; i++){
+            total += cart.products[i].total
+        }
+
+        const finalCart = {
+            ...cart,
+            total
+        }
+        res.status(200).send(finalCart);
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+
+}
+
 async function addCart(req, res) {
     const {userId} = res.locals.user;
     const { productId } = req.params;
@@ -26,7 +47,8 @@ async function addCart(req, res) {
         if(!userCart){
             product = {
                 ...product,
-                quantity: 1
+                quantity: 1,
+                total: product.price
             }
             await db.collection("cart").insertOne({userId, products: [product]})
             return res.sendStatus(200)
@@ -37,7 +59,8 @@ async function addCart(req, res) {
         if(!checkProduct) {
             product = {
                 ...product,
-                quantity: 1
+                quantity: 1,
+                total: product.price
             }
             const newProducts = [...userCart.products, product]
             const newCart = {
@@ -51,6 +74,7 @@ async function addCart(req, res) {
         for(let i = 0 ; i < userCart.products.length; i++){
             if(product._id.toString() === userCart.products[i]._id.toString()){
                 userCart.products[i].quantity += 1
+                userCart.products[i].total += product.price
             }
         }
 
@@ -72,7 +96,7 @@ async function removeCart(req, res) {
         const userCart = await db.collection("cart").findOne({userId});
         const product = await db.collection("products").findOne({_id: ObjectId(productId)});
         
-        if(userCart.userID.toString() !== userId.toString()){
+        if(userCart.userId.toString() !== userId.toString()){
             return res.sendStatus(401)
         }
 
@@ -98,7 +122,7 @@ async function removeOneCart(req, res) {
         const userCart = await db.collection("cart").findOne({userId});
         const product = await db.collection("products").findOne({_id: ObjectId(productId)});
         
-        if(userCart.userID.str !== userID.str){
+        if(userCart.userId.toString() !== userId.toString()){
             return res.sendStatus(401)
         }
 
@@ -107,6 +131,7 @@ async function removeOneCart(req, res) {
         for(let i = 0 ; i < userCart.products.length; i++){
             if(product._id.toString() === userCart.products[i]._id.toString()){
                 userCart.products[i].quantity -= 1
+                userCart.products[i].total -= product.price
             }
             if(userCart.products[i].quantity > 0){
                 newProducts.push(userCart.products[i])
@@ -129,6 +154,7 @@ async function removeOneCart(req, res) {
 
 export {
     listProducts,
+    listCart,
     addCart,
     removeCart,
     removeOneCart
