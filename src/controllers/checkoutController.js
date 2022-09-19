@@ -7,7 +7,7 @@ let db = await mongo();
 
 async function checkout(req, res) {
     const {userId} = res.locals.user;
-    const {paymentType} = req.body;
+    const {cardName, cardNumber} = req.body;
 
     try{
         
@@ -20,7 +20,8 @@ async function checkout(req, res) {
             orderId: uuid(),
             userId: userId,
             orderDate: dayjs().format("DD-MM-YYYY"),
-            paymentType,
+            cardName,
+            cardNumber,
             userOrder: userCart
         }
 
