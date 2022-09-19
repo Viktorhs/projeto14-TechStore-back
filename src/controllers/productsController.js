@@ -14,6 +14,19 @@ async function listProducts(req, res) {
 
 }
 
+async function findProduct(req, res) {
+    const {productId} = req.params
+
+    try {
+        const product = await db.collection('products').findOne({_id: ObjectId(productId)});
+        res.status(200).send(product);
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+
+}
+
 async function listCart(req, res) {
     const {userId} = res.locals.user;
     let total = 0
@@ -161,5 +174,6 @@ export {
     listCart,
     addCart,
     removeCart,
-    removeOneCart
+    removeOneCart,
+    findProduct
 }
