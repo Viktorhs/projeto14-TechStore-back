@@ -54,4 +54,5 @@ async function userInfos(req, res){
     }
 }
 
+
 export {checkout, userInfos}; 

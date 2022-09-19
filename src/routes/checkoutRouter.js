@@ -7,4 +7,5 @@ const checkoutRouter = Router();
 checkoutRouter.post("/checkout",authUser, checkout);
 checkoutRouter.get("/infos", authUser, userInfos);
 
+
 export default checkoutRouter;
