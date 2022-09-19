@@ -19,6 +19,10 @@ async function listCart(req, res) {
     let total = 0
     try {
         const cart = await db.collection('cart').findOne({userId});
+
+        if(!cart){
+            return res.status(404).send('Carrinho vazio');
+        }
         for(let i = 0; i < cart.products.length ; i++){
             total += cart.products[i].total
         }
